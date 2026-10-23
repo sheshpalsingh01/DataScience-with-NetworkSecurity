@@ -1,0 +1,27 @@
+python-dotenv
+# Data processing
+numpy
+pandas
+
+# Machine learning
+scikit-learn
+joblib
+
+# Experiment tracking
+mlflow
+
+# Configuration management
+PyYAML
+python-box
+
+# Utilities
+tqdm
+ensure
+
+# Visualization and experimentation
+matplotlib
+notebook
+
+# API / Web application
+Flask
+Flask-Cors
