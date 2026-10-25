@@ -1,4 +1,7 @@
 python-dotenv
+pymongo
+certifi
+
 # Data processing
 numpy
 pandas
@@ -25,3 +28,5 @@ notebook
 # API / Web application
 Flask
 Flask-Cors
+
+# -e .
