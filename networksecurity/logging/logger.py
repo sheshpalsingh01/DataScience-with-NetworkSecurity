@@ -1,5 +1,6 @@
 import logging
 import os
+import sys
 from datetime import datetime
 
 # Create a timestamp for the log filename
@@ -12,12 +13,14 @@ os.makedirs(LOG_DIR, exist_ok=True)
 # Create the complete log file path
 LOG_FILE_PATH = os.path.join(LOG_DIR, LOG_FILE)
 
-# Configure logging
+# Configure logging with both file and console handlers
 logging.basicConfig(
-    filename=LOG_FILE_PATH,
-    format="[%(asctime)s] %(name)s %(levelname)s "
-           "line %(lineno)d: %(message)s",
+    format="[%(asctime)s] %(name)s %(levelname)s line %(lineno)d: %(message)s",
     level=logging.INFO,
+    handlers=[
+        logging.FileHandler(LOG_FILE_PATH),
+        logging.StreamHandler(sys.stdout)
+    ]
 )
 
 # Create a reusable logger
