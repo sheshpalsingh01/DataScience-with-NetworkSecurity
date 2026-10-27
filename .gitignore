@@ -4,4 +4,4 @@ venv/
 Network_Data/
 __pycache__/
 logs/
-
+artifacts/

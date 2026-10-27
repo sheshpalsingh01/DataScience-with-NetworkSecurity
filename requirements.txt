@@ -5,6 +5,7 @@ certifi
 # Data processing
 numpy
 pandas
+scipy
 
 # Machine learning
 scikit-learn
@@ -20,6 +21,9 @@ python-box
 # Utilities
 tqdm
 ensure
+dill
+pyaml 
+PyYAML
 
 # Visualization and experimentation
 matplotlib
