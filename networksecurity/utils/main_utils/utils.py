@@ -76,7 +76,10 @@ def load_object(file_path:str) -> object:
     obj: object data to load
     """
     try:
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"file not found at {file_path}")
         with open(file_path,'rb') as file_obj:
+            logger.info(f"loading object from {file_path}")
             return pickle.load(file_obj)
     except Exception as e:
         raise NetworkSecurityException(e,sys)
