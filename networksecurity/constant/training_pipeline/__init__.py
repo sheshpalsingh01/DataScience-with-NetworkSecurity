@@ -46,6 +46,8 @@ Data Transformation related contstsnt start with DATA_TRANSFORMATION VAR NAME
 DATA_TRANSFORMATION_DIR_NAME: str = "data_transformation"
 DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR: str = "transformed_data"
 DATA_TRANSFORMATION_TRANSFORMED_OBJECT_DIR: str = "transformed_object"
+PREPROCESSING_OBJECT_FILE_NAME: str = "preprocessing.pkl"
+DATA_TRANSFORMATION_PREPROCESSING_OBJECT_FILE_NAME: str = "preprocessing.pkl"
 
 
 ## KNN imputer to replace nan values
@@ -56,9 +58,18 @@ DATA_TRANSFORMATION_IMPUTER_PARAMS: dict = {
 
 }
 
-DATA_TRANSFORMATION_OHE_PARAMS: dict = {
-    "handle_unknown": "ignore",
-    "sparse_output": False,
-}
-DATA_TRANSFORMATION_PREPROCESSING_OBJECT_FILE_NAME: str = "preprocessor.pkl"
-DATA_TRANSFORMATION_TRAIN_TEST_SPLIT_RATION: float = 0.2
+DATA_TRANSFORMATION_TRAIN_FILE_PATH: str = "train.npy"
+
+DATA_TRANSFORMATION_TEST_FILE_PATH: str = "test.npy"
+
+
+"""
+Model Trainer related constants start with MODEL_TRAINER VAR NAME
+"""
+MODEL_FILE_NAME: str = "model.pkl"
+SAVED_MODEL_DIR: str = os.path.join("saved_models")
+MODEL_TRAINER_DIR_NAME: str = "model_trainer"
+MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
+MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.pkl"
+MODEL_TRAINER_EXPECTED_SCORE: float = 0.6
+MODEL_TRAINER_OVER_FIITING_UNDER_FITTING_THRESHOLD: float = 0.05
