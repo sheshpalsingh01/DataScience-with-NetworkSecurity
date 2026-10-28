@@ -70,34 +70,16 @@ jobs:
           cache-to: type=gha,mode=max
 
   deploy:
-    name: Deploy to Railway
+    name: Deploy to Render
     needs: docker
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-
-      - name: Install Railway CLI
-        run: npm install --global @railway/cli
-
-      - name: Deploy to Railway
+      - name: Trigger Render deploy
         env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          RAILWAY_PROJECT_ID: ${{ vars.RAILWAY_PROJECT_ID }}
-          RAILWAY_SERVICE_ID: ${{ vars.RAILWAY_SERVICE_ID }}
-          RAILWAY_ENVIRONMENT_ID: ${{ vars.RAILWAY_ENVIRONMENT_ID }}
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
-          : "${RAILWAY_TOKEN:?Set the RAILWAY_TOKEN GitHub secret}"
-          : "${RAILWAY_PROJECT_ID:?Set the RAILWAY_PROJECT_ID GitHub variable}"
-          : "${RAILWAY_SERVICE_ID:?Set the RAILWAY_SERVICE_ID GitHub variable}"
-          : "${RAILWAY_ENVIRONMENT_ID:?Set the RAILWAY_ENVIRONMENT_ID GitHub variable}"
-          railway up --ci \
-            --project "$RAILWAY_PROJECT_ID" \
-            --service "$RAILWAY_SERVICE_ID" \
-            --environment "$RAILWAY_ENVIRONMENT_ID"
+          : "${RENDER_DEPLOY_HOOK_URL:?Set the RENDER_DEPLOY_HOOK_URL GitHub secret}"
+          curl --fail-with-body --silent --show-error \
+            --request POST \
+            "${RENDER_DEPLOY_HOOK_URL}&ref=${GITHUB_SHA}"

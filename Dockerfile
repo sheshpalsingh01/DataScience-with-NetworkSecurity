@@ -25,6 +25,6 @@ USER app
 EXPOSE 7000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=45s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:7000/', timeout=3)" || exit 1
+    CMD python -c "import os, urllib.request; urllib.request.urlopen(f'http://127.0.0.1:{os.getenv(\"PORT\", \"7000\")}/', timeout=3)" || exit 1
 
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7000"]
+CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT:-7000}"]
