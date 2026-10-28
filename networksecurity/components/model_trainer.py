@@ -36,17 +36,64 @@ class ModelTrainer:
         except Exception as e:
             raise NetworkSecurityException(e, sys)
 
-    def track_mlflow(self, best_model, classificationmetric):
+    def track_mlflow(
+        self,
+        best_model,
+        classificationmetric=None,
+        best_model_name: str = None,
+        best_model_score: float = None,
+        train_metric=None,
+        test_metric=None,
+        model_report: dict = None,
+    ):
         try:
+            # Set tracking URI and experiment name so MLflow UI connects to the same database
+            mlflow.set_tracking_uri("sqlite:///mlflow.db")
+            mlflow.set_experiment("NetworkSecurity")
+
             with mlflow.start_run():
-                f1_score = classificationmetric.f1_score
-                recall_score = classificationmetric.recall_score
-                precision_score = classificationmetric.precision_score
-                
-                mlflow.log_metric("f1_score", f1_score)
-                mlflow.log_metric("recall", recall_score)
-                mlflow.log_metric("precision", precision_score)
-                
+                # 1. Log best model name
+                if best_model_name:
+                    mlflow.set_tag("best_model_name", best_model_name)
+                    mlflow.log_param("best_model_name", best_model_name)
+
+                # 2. Log model hyperparameters
+                try:
+                    for param_name, param_val in best_model.get_params().items():
+                        if isinstance(param_val, (int, float, str, bool)) or param_val is None:
+                            mlflow.log_param(param_name, param_val)
+                except Exception:
+                    pass
+
+                # 3. Log model score
+                if best_model_score is not None:
+                    mlflow.log_metric("best_model_score", float(best_model_score))
+
+                # 4. Log comparison scores for all tested models
+                if model_report:
+                    for m_name, m_score in model_report.items():
+                        clean_name = m_name.replace(" ", "_").lower()
+                        mlflow.log_metric(f"model_score_{clean_name}", float(m_score))
+
+                # 5. Log Train Metrics
+                if train_metric is not None:
+                    mlflow.log_metric("train_f1_score", float(train_metric.f1_score))
+                    mlflow.log_metric("train_precision_score", float(train_metric.precision_score))
+                    mlflow.log_metric("train_recall_score", float(train_metric.recall_score))
+
+                # 6. Log Test Metrics (or single metric if passed as classificationmetric)
+                target_metric = test_metric if test_metric is not None else classificationmetric
+                if target_metric is not None:
+                    mlflow.log_metric("test_f1_score", float(target_metric.f1_score))
+                    mlflow.log_metric("test_precision_score", float(target_metric.precision_score))
+                    mlflow.log_metric("test_recall_score", float(target_metric.recall_score))
+
+                    # Standard metric names for quick view
+                    mlflow.log_metric("f1_score", float(target_metric.f1_score))
+                    mlflow.log_metric("precision", float(target_metric.precision_score))
+                    mlflow.log_metric("recall", float(target_metric.recall_score))
+
+                # 7. Log model artifact
                 mlflow.sklearn.log_model(best_model, "model")
 
         except Exception as e:
@@ -100,14 +147,18 @@ class ModelTrainer:
             y_train_pred = best_model.predict(x_train)
             classification_train_metric = get_classification_score(y_true=y_train, y_pred=y_train_pred)
 
-            # Track the experiment with mlflow for train
-            self.track_mlflow(best_model, classification_train_metric)
-
             y_test_pred = best_model.predict(x_test)
             classification_test_metric = get_classification_score(y_true=y_test, y_pred=y_test_pred)
 
-            # Track the experiment with mlflow for test
-            self.track_mlflow(best_model, classification_test_metric)
+            # Track all model parameters, comparison scores, train & test metrics in MLflow
+            self.track_mlflow(
+                best_model=best_model,
+                best_model_name=best_model_name,
+                best_model_score=best_model_score,
+                train_metric=classification_train_metric,
+                test_metric=classification_test_metric,
+                model_report=model_report,
+            )
 
             
             preprocessor = load_object(file_path=self.data_transformation_artifact.transformed_object_file_path)

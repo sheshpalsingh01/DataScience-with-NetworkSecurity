@@ -5,3 +5,7 @@ Network_Data/
 __pycache__/
 logs/
 artifacts/
+mlruns/
+*.db
+*.db-shm
+*.db-wal
