@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4ef">
+  <title>Analysis results · Northstar</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1d2926;
+      --muted: #6a7771;
+      --line: #e2e6df;
+      --paper: #fbfbf8;
+      --canvas: #f3f4ef;
+      --green: #245c49;
+      --green-dark: #194535;
+      --mint: #e7f0e9;
+      --amber: #bd8a42;
+      font-family: Inter, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--canvas); color: var(--ink); }
+    a { color: inherit; }
+    .topbar {
+      height: 76px;
+      padding: 0 clamp(22px, 6vw, 88px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: rgba(251, 251, 248, .92);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .brand-mark {
+      width: 34px; height: 34px; display: grid; place-items: center;
+      border-radius: 10px; background: var(--green); color: white;
+    }
+    .brand-name { font-family: Georgia, "Times New Roman", serif; font-size: 19px; letter-spacing: -.3px; }
+    .brand-sub { margin-top: 2px; color: var(--muted); font-size: 10px; letter-spacing: 1.15px; text-transform: uppercase; }
+    .top-link { color: var(--green); font-size: 13px; font-weight: 600; text-decoration: none; }
+    .top-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+    main { width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding: 52px 0 76px; }
+    .eyebrow {
+      display: flex; align-items: center; gap: 9px; color: var(--green);
+      font-size: 11px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase;
+    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #4b9068; box-shadow: 0 0 0 4px #e1eee3; }
+    h1 { margin: 16px 0 9px; font: 400 clamp(36px, 5vw, 54px)/1.07 Georgia, "Times New Roman", serif; letter-spacing: -1.7px; }
+    .intro { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.7; }
+    .result-card {
+      margin-top: 34px; overflow: hidden; border: 1px solid var(--line); border-radius: 12px;
+      background: var(--paper); box-shadow: 0 12px 32px rgba(27, 44, 37, .045);
+    }
+    .card-head {
+      min-height: 75px; padding: 17px 22px; display: flex; align-items: center;
+      justify-content: space-between; gap: 18px; border-bottom: 1px solid var(--line);
+    }
+    .card-title { margin: 0; font: 400 20px Georgia, "Times New Roman", serif; }
+    .card-note { margin-top: 5px; color: var(--muted); font-size: 12px; }
+    .result-label {
+      flex: 0 0 auto; padding: 7px 10px; border: 1px solid #d5e5d7; border-radius: 999px;
+      background: #edf5ed; color: #38664a; font-size: 11px; font-weight: 700;
+    }
+    .table-wrap { overflow: auto; max-height: 660px; }
+    .table {
+      width: 100%; border-collapse: separate; border-spacing: 0; color: #34413b;
+      font-size: 12px; white-space: nowrap;
+    }
+    .table th, .table td { padding: 13px 15px; border-bottom: 1px solid #edf0ea; text-align: left; }
+    .table th {
+      position: sticky; top: 0; z-index: 1; background: #f2f5ef; color: #53645a;
+      font-size: 10px; font-weight: 700; letter-spacing: .55px; text-transform: uppercase;
+    }
+    .table tr:last-child td { border-bottom: 0; }
+    .table tbody tr:hover { background: #f7f9f5; }
+    .table-striped tbody tr:nth-child(even) { background: #fafbf8; }
+    .table-striped tbody tr:nth-child(even):hover { background: #f4f7f1; }
+    .actions { margin-top: 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .fine-print { max-width: 470px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+    .button {
+      min-height: 45px; padding: 0 18px; display: inline-flex; align-items: center; justify-content: center;
+      gap: 9px; border-radius: 6px; background: var(--green); color: white;
+      font-size: 13px; font-weight: 650; text-decoration: none; transition: background .18s ease, transform .18s ease;
+    }
+    .button:hover { background: var(--green-dark); transform: translateY(-1px); }
+    footer {
+      padding: 19px clamp(22px, 6vw, 88px); display: flex; justify-content: space-between; gap: 16px;
+      border-top: 1px solid var(--line); color: var(--muted); font-size: 11px;
+    }
+    @media (max-width: 640px) {
+      .topbar { height: 68px; }
+      main { padding-top: 38px; }
+      .card-head { align-items: flex-start; }
+      .actions { align-items: stretch; flex-direction: column-reverse; }
+      .button { width: 100%; }
+      footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Northstar home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2.8 19.5 6v5.2c0 5-3.2 8.3-7.5 10-4.3-1.7-7.5-5-7.5-10V6L12 2.8Z" stroke="currentColor" stroke-width="1.6"/>
+          <path d="m9 12.2 2 2 4.2-4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span><span class="brand-name">Northstar</span><span class="brand-sub">Network intelligence</span></span>
+    </a>
+    <a class="top-link" href="/">← New analysis</a>
+  </header>
+
+  <main>
+    <div class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Analysis complete</div>
+    <h1>Your results are ready.</h1>
+    <p class="intro">Review the model output alongside your submitted network records.</p>
+
+    <section class="result-card" aria-labelledby="results-heading">
+      <div class="card-head">
+        <div>
+          <h2 class="card-title" id="results-heading">Prediction results</h2>
+          <div class="card-note">Original input fields with the model prediction appended.</div>
+        </div>
+        <span class="result-label">Completed</span>
+      </div>
+      <div class="table-wrap">
+        {{ table | safe }}
+      </div>
+    </section>
+
+    <div class="actions">
+      <p class="fine-print">Predictions are model-generated signals and should be reviewed in the context of your organization’s security process.</p>
+      <a class="button" href="/">
+        Run another analysis
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M8.5 3.5 13 8l-4.5 4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </main>
+  <footer>
+    <span>Northstar · Network intelligence</span>
+    <span>Designed for careful, human-led security decisions</span>
+  </footer>
+</body>
+</html>

@@ -1,6 +1,7 @@
 python-dotenv
 pymongo
 certifi
+boto3
 
 # Data processing
 numpy
@@ -33,5 +34,7 @@ notebook
 # API / Web application
 Flask
 Flask-Cors
+fastapi
+uvicorn
 
 # -e .

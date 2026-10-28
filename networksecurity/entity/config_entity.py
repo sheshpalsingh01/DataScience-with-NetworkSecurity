@@ -4,11 +4,13 @@ import os
 
 
 class TrainingPipelineConfig:
-    def __init__(self, timestamp=datetime.now()):
+    def __init__(self, timestamp=None):
+        timestamp = timestamp or datetime.now()
         timestamp = timestamp.strftime("%Y%m%d_%H%M%S")
         self.pipeline_name = training_pipeline.PIPELINE_NAME
         self.artifact_name = training_pipeline.PIPELINE_ARTIFACT_DIR
         self.artifact_dir = os.path.join(self.artifact_name, timestamp)
+        self.model_dir = "final_model"
         self.timestamp = timestamp
 
 
