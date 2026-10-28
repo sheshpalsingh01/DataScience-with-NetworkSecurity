@@ -32,9 +32,18 @@ class DataTransformationArtifact:
 
 @dataclass
 class ClassificationMetricArtifact:
-    f1_score:float
-    precision_score:float
-    recall_score:float
+    f1_score: float
+    precision_score: float
+    recall_score: float
+
+    @property
+    def recall(self) -> float:
+        return self.recall_score
+
+    @property
+    def precision(self) -> float:
+        return self.precision_score
+
     
 
 @dataclass
