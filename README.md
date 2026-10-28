@@ -44,3 +44,13 @@ docker run --rm --name network-security-app \
 Open `http://localhost:8000`. The Floci endpoint override lets the container
 reach Floci running on the host. The image excludes `.env`; provide settings at
 runtime as shown above. The app listens on port `7000` inside the container.
+
+## CI/CD
+
+The GitHub Actions workflow in `.github/workflows/main.yml` compiles the Python
+sources and builds the Docker image for pull requests and pushes to `main`.
+Successful pushes to `main` also publish the image to GitHub Container Registry
+(`ghcr.io/<owner>/<repository>`), tagged with the commit SHA and `latest` for
+the default branch. The workflow uses the repository-provided `GITHUB_TOKEN`;
+enable package write access for Actions if the repository's organization policy
+requires it.
