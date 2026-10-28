@@ -28,6 +28,9 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier, GradientBoostingClassifier
 import mlflow
 
+import dagshub
+dagshub.init(repo_owner='sheshpalsingh2024', repo_name='DataScience-with-NetworkSecurity', mlflow=True)
+
 class ModelTrainer:
     def __init__(self, model_trainer_config: ModelTrainerConfig, data_transformation_artifact: DataTransformationArtifact):
         try:
@@ -48,7 +51,7 @@ class ModelTrainer:
     ):
         try:
             # Set tracking URI and experiment name so MLflow UI connects to the same database
-            mlflow.set_tracking_uri("sqlite:///mlflow.db")
+            
             mlflow.set_experiment("NetworkSecurity")
 
             with mlflow.start_run():
