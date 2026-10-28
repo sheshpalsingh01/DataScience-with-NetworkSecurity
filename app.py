@@ -1,4 +1,4 @@
-import os,sys,certifi,pymongo
+import os,sys
 from pathlib import Path
 from functools import lru_cache
 import tempfile
@@ -6,7 +6,6 @@ import requests
 from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR / ".env")
-from networksecurity.pipeline.training_pipeline import TrainingPipeline
 from networksecurity.logging.logger import logger
 from networksecurity.exception.exception import NetworkSecurityException
 
@@ -20,16 +19,6 @@ from networksecurity.utils.main_utils.utils import load_object
 
 from networksecurity.utils.ml_utils.model.estimator import NetworkModel
 from networksecurity.cloud.s3_sync import S3Sync
-
-mongo_db_url = os.getenv("MONGODB_URI")
-ca = certifi.where()
-client = pymongo.MongoClient(mongo_db_url, tlsCAFile=ca)
-
-from networksecurity.constant.training_pipeline import DATA_INGESTION_COLLECTION_NAME
-from networksecurity.constant.training_pipeline import DATA_INGESTION_DATABASE_NAME
-
-database = client[DATA_INGESTION_DATABASE_NAME]
-collection = database[DATA_INGESTION_COLLECTION_NAME]
 
 app = FastAPI()
 origins = ["*"]
@@ -91,6 +80,8 @@ async def index(request: Request):
 @app.get("/train")
 async def train_route():
     try:
+        from networksecurity.pipeline.training_pipeline import TrainingPipeline
+
         train_pipeline = TrainingPipeline()
         train_pipeline.run_pipeline()
         return Response("Training is successful")

@@ -9,7 +9,7 @@ pandas
 scipy
 
 # Machine learning
-scikit-learn
+scikit-learn==1.9.1
 joblib
 
 # Experiment tracking
@@ -36,5 +36,7 @@ Flask
 Flask-Cors
 fastapi
 uvicorn
+jinja2
+python-multipart
 
 # -e .

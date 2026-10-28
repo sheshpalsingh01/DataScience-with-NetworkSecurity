@@ -26,3 +26,21 @@ For files uploaded at the bucket root, leave `MODEL_S3_PREFIX` empty. If the
 files are inside a folder, set it to that folder name (for example,
 `MODEL_S3_PREFIX=final_model/20261028_183000`). Model files are cached for
 the current app process; restart the app after replacing the bucket objects.
+
+## Run the web app with Docker
+
+Build and run the image from this project directory:
+
+```bash
+docker build -t network-security-app .
+docker run --rm --name network-security-app \
+  --env-file .env \
+  --add-host=host.docker.internal:host-gateway \
+  -e FLOCI_S3_ENDPOINT_URL=http://host.docker.internal:4566 \
+  -p 8000:7000 \
+  network-security-app
+```
+
+Open `http://localhost:8000`. The Floci endpoint override lets the container
+reach Floci running on the host. The image excludes `.env`; provide settings at
+runtime as shown above. The app listens on port `7000` inside the container.
