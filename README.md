@@ -54,3 +54,20 @@ Successful pushes to `main` also publish the image to GitHub Container Registry
 the default branch. The workflow uses the repository-provided `GITHUB_TOKEN`;
 enable package write access for Actions if the repository's organization policy
 requires it.
+
+After the image job succeeds on `main`, the workflow also deploys the source
+using the project's `Dockerfile` to Railway. Create a Railway project and
+service first, then add these GitHub repository settings under **Settings →
+Secrets and variables → Actions**:
+
+- Secret `RAILWAY_TOKEN`: a Railway project token for the target environment.
+- Variables `RAILWAY_PROJECT_ID`, `RAILWAY_SERVICE_ID`, and
+  `RAILWAY_ENVIRONMENT_ID`: IDs from the Railway project, service, and
+  environment.
+
+The app's tracked model files are included in the image, so Railway can use
+them without connecting to local Floci. Do not set `FLOCI_S3_ENDPOINT_URL` to
+`localhost` or `host.docker.internal` in Railway; those addresses refer to
+your computer, not the Railway service. Configure any production S3 endpoint
+and credentials as Railway service variables only if you move the models to
+reachable object storage.
